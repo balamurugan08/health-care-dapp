@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import React from "react";
-// import Alert from "@mui/material/Alert";
+import Alert from "@mui/material/Alert";
 import { withRouter } from "react-router";
 import axios from "axios";
 
@@ -14,7 +14,9 @@ class Login extends React.Component {
       username: "",
       password: "",
       shouldAlertDisplay: false,
-      shouldLoginErrorDisplay:false
+      shouldLoginErrorDisplay:false,
+      account: this.props.account,
+      userContract: this.props.userContract
     };
   }
 
@@ -26,17 +28,38 @@ class Login extends React.Component {
     this.setState({ password: e.target.value });
   };
 
-  handleLogin = () => {
-    // const { username, password } = this.state;
+  handleLogin = async () => {
+     const { username, password, account , userContract} = this.state;
     const {
       history: { push },
     } = this.props;
-    // if (username === "" || password === "") {
-    //   this.setState({ shouldAlertDisplay: true });
-    //   return;
-    // }
-    // this.setState({ shouldAlertDisplay: false });
-    // this.setState({ shouldLoginErrorDisplay: false });
+    if (username === "" || password === "") {
+      this.setState({ shouldAlertDisplay: true });
+      return;
+    }
+    this.setState({ shouldAlertDisplay: false });
+    this.setState({ shouldLoginErrorDisplay: false });
+
+    const getUserList = await userContract.methods.getUsers().call();
+    console.log('UserList', getUserList)
+    let isAunticatedUser = false;
+    getUserList.forEach(user=>{
+      if(user.name === username && user.password === password){
+        isAunticatedUser= true;
+        return;
+      }
+    })
+
+    if(isAunticatedUser){
+      push({
+        pathname: "/home",
+        // username: username, 
+      });
+    }else{
+      this.setState({shouldLoginErrorDisplay: true})
+    }
+
+
     // const reqJson={
     //   username:username,password:password
     // }
@@ -54,10 +77,7 @@ class Login extends React.Component {
     //  }
     // });
 
-    push({
-      pathname: "/home",
-      // username: username, 
-    });
+  
   };
 
   render() {
@@ -71,7 +91,7 @@ class Login extends React.Component {
           <div className="flex">
             <p className={`text-lg ${isDoctor ? 'text-white':''}`}>New User?</p>
             <Link
-              to={isDoctor ? "/doctor-signup": "patient-signup"}
+              to={isDoctor ? "/doctor-signup": "/"}
               className={`${isDoctor ? 'text-white ':'text-blue-500'} font-semibold text-lg px-1 underline`}
             >
               Sign up
@@ -98,12 +118,12 @@ class Login extends React.Component {
         <Button variant="contained" onClick={this.handleLogin} style={isDoctor?{backgroundColor:'#fff',color:'#2b82f6'}:{backgroundColor:'#2b82f6'}}>
           Login
         </Button>
-        {/* {shouldAlertDisplay && (
+        {shouldAlertDisplay && (
           <Alert severity="error">Field cannot be empty</Alert>
         )}
         {shouldLoginErrorDisplay && (
           <Alert severity="error">Invalid username or password</Alert>
-        )} */}
+        )}
       </div>
     );
   }

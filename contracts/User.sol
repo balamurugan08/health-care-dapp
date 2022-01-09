@@ -11,23 +11,39 @@ contract User {
     struct LoginUser {
         uint id; // weight is accumulated by delegation
         string name;  // if true, that person already voted
+        string email; // if true, that person
         string password; // person delegated to
+        string phoneNo; //
+        string planType;
     }
 
-    LoginUser[] users;
+    mapping (uint => LoginUser) public users;
+    uint[] public userIdList;
 
-     string private greeting;
-
+    constructor() public {
+    }
     
- function addUser(string memory name,string memory password) external returns(bool){
-        uint id = users.length;
-        LoginUser memory user = LoginUser(id,name, password);
-        users.push(user);
-        return (true);
+    function addUser(uint id,string memory name,string memory email,string memory password,string memory phoneNo,string memory planType) public returns(LoginUser memory){
+        LoginUser memory user = LoginUser(id,name, email,password,phoneNo,planType);
+        users[id] = user; 
+        userIdList.push(id);
+        return user;
     }
 
-    function getUsers() external returns(LoginUser[] memory){
-        return users;
+    function getUser(uint index) external view returns(LoginUser memory){
+        return users[index];
+    }
+
+    function getUsers() public view returns (LoginUser[] memory) {
+        LoginUser[] memory userArray = new LoginUser[](userIdList.length);
+        for(uint i = 0; i < userIdList.length; i++) {
+            userArray[i] = users[userIdList[i]];
+        }
+        return userArray;
+    }
+
+    function getLength() public view returns (uint){
+        return userIdList.length;
     }
    
 }

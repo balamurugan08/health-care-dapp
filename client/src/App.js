@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
-import HelloWorld from "./contracts/HelloWorld.json";
 import User from "./contracts/User.json";
 import getWeb3 from "./getWeb3";
 import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Main from "./components/Main";
 import { BrowserRouter, Route } from "react-router-dom";
 
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null,userList:null };
+  state = {  web3: null, accounts: null, contract: null,userList:null };
 
-  componentDidMount = async () => {
+  componentWillMount = async () => {
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
@@ -21,29 +21,19 @@ class App extends Component {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      let deployedNetwork = SimpleStorageContract.networks[networkId];
-      const storageInstance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
-      console.log('storageInstance-------',storageInstance)
-      deployedNetwork = HelloWorld.networks[networkId];
-      const helloWorldInstance = new web3.eth.Contract(
-        HelloWorld.abi,
-        deployedNetwork && deployedNetwork.address
-      );
-      console.log('helloWorldInstance-------',helloWorldInstance)
+      let deployedNetwork ;
+      
       deployedNetwork = User.networks[networkId];
       const userInstance = new web3.eth.Contract(
         User.abi,
         deployedNetwork && deployedNetwork.address
       );
-console.log('UserInstance-------',userInstance)
+   console.log('UserInstance-------',userInstance)
       
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, storageContract: storageInstance, helloWorldContract: helloWorldInstance, userContract:userInstance }, this.runExample);
+      this.setState({ web3, accounts, userContract:userInstance }, this.runExample);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -54,7 +44,7 @@ console.log('UserInstance-------',userInstance)
   };
 
   runExample = async () => {
-    const { accounts, storageContract, helloWorldContract,userContract } = this.state;
+    const { accounts,userContract } = this.state;
 
     // Stores a given value, 5 by default.
     // await storageContract.methods.set(5).send({ from: accounts[0] });
@@ -64,27 +54,27 @@ console.log('UserInstance-------',userInstance)
 
     // const greetingResponse = await helloWorldContract.methods.getGreeting().call();
 
-    const userResponse = await userContract.methods.addUser("bala","bala").call();
+    // const userResponse = await userContract.methods.addUser(1,"bala","bala@gmail.com","bala_123","7859512591","BASIC").send({from:accounts[0]});
+    // const userResponse2 = await userContract.methods.addUser(2,"moulee","moulee@gmail.com","moulee_123","7859512592","PREMIUM").send({from:accounts[0]});
 
-    const getUserList = await userContract.methods.getUsers().call();
-    console.log('UserList', getUserList)
+    // const getUserList = await userContract.methods.getUsers().call();
+    // console.log('UserList', getUserList)
 
     // Update state with the result.
     // this.setState({ storageValue: storageResponse, greeting: greetingResponse, userList:getUserList});
   };
 
   render() {
+    const { accounts,userContract } = this.state;
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <BrowserRouter>
       <div className="flex flex-col min-h-screen">
-       <p>{this.state.userList}</p>
-        {/* <Route path="/" component={Login} exact></Route> */}
-        {/* <Route path="/doctor-signup" component={Signup}></Route>
-        <Route path="/patient-signup" component={PatientSignup}></Route>
-        <Route path="/home" component={Main}></Route> */}
+        <Route path="/" component={Signup} exact children={ <Signup  account={accounts[0]} userContract={userContract} />}></Route>
+        <Route path="/login" component={Login} children={ <Login  account={accounts[0]} userContract={userContract} />}></Route>
+        <Route path="/home" component={Main}></Route>
       </div>
     </BrowserRouter>
     );
