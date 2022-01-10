@@ -11,7 +11,10 @@ import Paper from "@material-ui/core/Paper";
 import Button from '@material-ui/core/Button';
 import TextField from "@mui/material/TextField";
 import { Input } from "@material-ui/core";
-import StatisticsTable from "./StatisticsTable";
+import PatientDetailTable from "./PatientDetailTable";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddPatientDetail from "./AddPatientDetail";
+import Alert from "@mui/material/Alert";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -49,12 +52,18 @@ const styles = (theme) => ({
 
 const eventBaseUrl = "http://localhost:8080/sports/events";
 
-class OngoingEvents extends React.Component {
+class PatientDetail extends React.Component {
   state = {
    eventDetails: [],
    isShowCard:true,
    newEventDetails: [],
-   isShowTable:false
+   isShowTable:false,
+   showPatientAddDetail:false,
+   patientId:'',
+   account: this.props.account,
+  userContract: this.props.userContract,
+  patientData:[],
+  shouldErrorMessageDisplay:false
   };
 
   componentWillMount(){
@@ -75,25 +84,52 @@ class OngoingEvents extends React.Component {
     this.setState({isShowCard:true,newEventDetails:[]})
   }
 
-  handleSubmit=()=>{
-    this.setState({
-      isShowTable:true
+  handleSubmit= async () =>{
+    const { patientId, account , userContract,patientData} = this.state;
+    const getPatientList = await userContract.methods.getPatientList().call();
+    console.log('UserList', getPatientList)
+    getPatientList.forEach((patient,index)=>{
+      if(patient.id === patientId){
+        console.log('check',getPatientList[index])
+        this.setState({
+          patientData:getPatientList[index],
+          isShowTable:true
+        })
+        console.log('check123',patientData)
+      }
+      else{
+        this.setState({
+          shouldErrorMessageDisplay:true
+        })
+        
+      }
     })
+  }
+
+  addNewPatient=()=>{
+    this.setState({
+      showPatientAddDetail:true
+    })
+  }
+
+  handlePatientID = (e)=>{
+    this.setState({ patientId: e.target.value });
   }
 
   render() {
     const {
-      eventDetails,isShowCard,newEventDetails
+      eventDetails,isShowCard,newEventDetails,patientData,shouldErrorMessageDisplay
     } = this.state;
-    const { classes } = this.props;
-    
+    const { classes, account,userContract} = this.props;
+    console.log('data',patientData[0])
     return (
       <div className="flex justify-center">
-      {!this.state.isShowTable &&( <div className="mt-5 ml-6 flex items-center">
+      {!this.state.isShowTable &&!this.state.showPatientAddDetail&&( <div className="mt-5 ml-6 flex-col items-center">
+              <div>
               <span className="text-xl mr-4">Enter Patient ID</span>
               <Input
                 classes={{ root: classes.root_input }}
-                onChange={this.handleQuarterAnalysisChange}
+                onChange={this.handlePatientID}
                 autoFocus
                 disableUnderline
               />
@@ -104,17 +140,33 @@ class OngoingEvents extends React.Component {
               >
                 Submit
               </Button>
+              </div>
+             
+              <div style={{cursor:'pointer',color:'blue',marginLeft: 154,marginTop: 18,fontSize: 18,alignItems:"center",display: "flex"}}
+                   onClick={this.addNewPatient}>
+              <AddCircleIcon></AddCircleIcon>
+               <span>Add new Patient</span>
+                
+              </div>
+              {shouldErrorMessageDisplay &&
+          <Alert severity="error">Invalid Patient ID</Alert>
+        }
+             
             </div>)}
             {this.state.isShowTable && (
           <div className="flex flex-col justify-center mt-10 space-y-2 w-2/4">
-            <StatisticsTable
-              handleBack={this.handleBack}
+            <PatientDetailTable
+              handleBack={this.handleBack} patientData={this.state.patientData}
             />
           </div>
         )}
+        {this.state.showPatientAddDetail&&
+        <div className="flex flex-col justify-center mt-10 space-y-2 w-2/4">
+        <AddPatientDetail account={this.props.account} userContract={this.props.userContract}/>
+      </div>}
       </div>
     );
   }
 }
 
-export default withStyles(styles)(OngoingEvents);
+export default withStyles(styles)(PatientDetail);

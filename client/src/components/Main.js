@@ -5,7 +5,10 @@ import { withRouter } from "react-router";
 class Main extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      account: this.props.account,
+      userContract: this.props.userContract
+    };
   }
 
   componentWillMount() {
@@ -39,7 +42,7 @@ class Main extends React.Component {
             Logout
           </button>
         </div>
-        <Tab />
+        <Tab account={this.state.account} userContract={this.state.userContract}/>
       </div>
     );
   }

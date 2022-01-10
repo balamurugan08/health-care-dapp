@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import OngoingEvents from './OngoingEvents';
-import UpcomingEvents from './UpcomingEvents';
+import PatientDetail from './PatientDetail';
+import DoctorDetail from './DoctorDetail';
 
 
 const styles = theme => ({
@@ -17,9 +17,18 @@ const styles = theme => ({
 });
 
 class SimpleTabs extends React.Component {
-  state = {
-    value: 0,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 0,
+      account: this.props.account,
+      userContract: this.props.userContract
+    };
+  }
+  // state = {
+  //   value: 0,
+   
+  // };
 
   handleChange = (event, value) => {
     this.setState({ value });
@@ -38,8 +47,8 @@ class SimpleTabs extends React.Component {
             {/* <Tab label="View Patient Examine Details" href="#basic-tabs" /> */}
           </Tabs>
         </AppBar>
-        {value === 0 && <OngoingEvents/>}
-        {value === 1 && <UpcomingEvents/>}
+        {value === 0 && <PatientDetail account={this.state.account} userContract={this.state.userContract}/>}
+        {value === 1 && <DoctorDetail account={this.state.account} userContract={this.state.userContract}/>}
         {/* {value === 2 && <DiscussionForum/>} */}
       </div>
     );

@@ -32,66 +32,66 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-class StatisticsTable extends React.Component {
+class DoctorDetailTable extends React.Component {
   state = {};
 
   render() {
-    const { handleBack, classes, data } = this.props;
-
+    const { handleBack, classes, DoctorData } = this.props;
+    const data = this.props.DoctorData;
+    console.log('sadfsdfsd',data)
     return (
       <div className="space-y-6">
         <TableContainer component={Paper}>
   <Table aria-label="simple table">
     <TableHead>
       <TableRow>
-        <StyledTableCell>Patient Details</StyledTableCell>
+        <StyledTableCell>Doctor Details</StyledTableCell>
         <StyledTableCell align="center"></StyledTableCell>
       </TableRow>
     </TableHead>
     <TableBody>
-        <StyledTableRow >
+    <StyledTableRow >
           <StyledTableCell component="th" scope="row">
-           Patient Name
+           Doctor ID
           </StyledTableCell>
-          <StyledTableCell align="center">Sam Curran</StyledTableCell>
+          <StyledTableCell align="center">{data.id}</StyledTableCell>
         </StyledTableRow>
         <StyledTableRow >
           <StyledTableCell component="th" scope="row">
-           Patient Age
+           Doctor Name
           </StyledTableCell>
-          <StyledTableCell align="center">28</StyledTableCell>
+          <StyledTableCell align="center">{data.name}</StyledTableCell>
         </StyledTableRow>
         <StyledTableRow >
           <StyledTableCell component="th" scope="row">
-           Patient EmailId
+           Doctor Age
           </StyledTableCell>
-          <StyledTableCell align="center">samcurran@gmail.com</StyledTableCell>
+          <StyledTableCell align="center">{data.age}</StyledTableCell>
         </StyledTableRow>
         <StyledTableRow >
           <StyledTableCell component="th" scope="row">
-           Patient Phone number
+           Gender
           </StyledTableCell>
-          <StyledTableCell align="center">1 877-366-2431</StyledTableCell>
+          <StyledTableCell align="center">{data.gender}</StyledTableCell>
         </StyledTableRow>
         <StyledTableRow >
           <StyledTableCell component="th" scope="row">
-           Patient Address
+           Doctor EmailId
           </StyledTableCell>
-          <StyledTableCell align="center">San francisco, US</StyledTableCell>
+          <StyledTableCell align="center">{data.email}</StyledTableCell>
         </StyledTableRow>
         <StyledTableRow >
           <StyledTableCell component="th" scope="row">
-           Patient Height
+           Doctor Phone number
           </StyledTableCell>
-          <StyledTableCell align="center">170 cm</StyledTableCell>
+          <StyledTableCell align="center">{data.phoneNo}</StyledTableCell>
         </StyledTableRow>
         <StyledTableRow >
           <StyledTableCell component="th" scope="row">
-           Patient Weight
+           Doctor Address
           </StyledTableCell>
-          <StyledTableCell align="center">85 kg</StyledTableCell>
+          <StyledTableCell align="center">{data.doctorAddress}</StyledTableCell>
         </StyledTableRow>
-       
     </TableBody>
   </Table>
 </TableContainer>
@@ -100,4 +100,4 @@ class StatisticsTable extends React.Component {
   }
 }
 
-export default withStyles(styles)(StatisticsTable);
+export default withStyles(styles)(DoctorDetailTable);

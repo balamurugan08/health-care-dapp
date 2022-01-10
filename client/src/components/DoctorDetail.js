@@ -9,8 +9,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from '@material-ui/core/Button';
-import DoctorTable from "./DoctorTable";
+import TextField from "@mui/material/TextField";
 import { Input } from "@material-ui/core";
+import DoctorDetailTable from "./DoctorDetailTable";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddDoctorDetail from "./AddDoctorDetail";
+import Alert from "@mui/material/Alert";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -48,12 +52,18 @@ const styles = (theme) => ({
 
 const eventBaseUrl = "http://localhost:8080/sports/events";
 
-class UpcomingEvents extends React.Component {
+class DoctorDetail extends React.Component {
   state = {
    eventDetails: [],
    isShowCard:true,
    newEventDetails: [],
-   isShowTable:false
+   isShowTable:false,
+   showDoctorAddDetail:false,
+   DoctorId:'',
+   account: this.props.account,
+  userContract: this.props.userContract,
+  DoctorData:[],
+  shouldErrorMessageDisplay:false
   };
 
   componentWillMount(){
@@ -74,26 +84,52 @@ class UpcomingEvents extends React.Component {
     this.setState({isShowCard:true,newEventDetails:[]})
   }
 
-  handleSubmit=()=>{
-    this.setState({
-      isShowTable:true
+  handleSubmit= async () =>{
+    const { DoctorId, account , userContract,DoctorData} = this.state;
+    const getDoctorList = await userContract.methods.getDoctorList().call();
+    console.log('UserList', getDoctorList)
+    getDoctorList.forEach((Doctor,index)=>{
+      if(Doctor.id === DoctorId){
+        console.log('check',getDoctorList[index])
+        this.setState({
+          DoctorData:getDoctorList[index],
+          isShowTable:true
+        })
+        console.log('check123',DoctorData)
+      }
+      else{
+        this.setState({
+          shouldErrorMessageDisplay:true
+        })
+        
+      }
     })
   }
 
+  addNewDoctor=()=>{
+    this.setState({
+      showDoctorAddDetail:true
+    })
+  }
+
+  handleDoctorID = (e)=>{
+    this.setState({ DoctorId: e.target.value });
+  }
 
   render() {
     const {
-      eventDetails,isShowCard,newEventDetails
+      eventDetails,isShowCard,newEventDetails,DoctorData,shouldErrorMessageDisplay
     } = this.state;
-    const { classes } = this.props;
-    
+    const { classes, account,userContract} = this.props;
+    console.log('data',DoctorData[0])
     return (
       <div className="flex justify-center">
-      {!this.state.isShowTable &&( <div className="mt-5 ml-6 flex items-center">
+      {!this.state.isShowTable &&!this.state.showDoctorAddDetail&&( <div className="mt-5 ml-6 flex-col items-center">
+              <div>
               <span className="text-xl mr-4">Enter Doctor ID</span>
               <Input
                 classes={{ root: classes.root_input }}
-                onChange={this.handleQuarterAnalysisChange}
+                onChange={this.handleDoctorID}
                 autoFocus
                 disableUnderline
               />
@@ -104,17 +140,33 @@ class UpcomingEvents extends React.Component {
               >
                 Submit
               </Button>
+              </div>
+             
+              <div style={{cursor:'pointer',color:'blue',marginLeft: 154,marginTop: 18,fontSize: 18,alignItems:"center",display: "flex"}}
+                   onClick={this.addNewDoctor}>
+              <AddCircleIcon></AddCircleIcon>
+               <span>Add new Doctor</span>
+                
+              </div>
+              {shouldErrorMessageDisplay &&
+          <Alert severity="error">Invalid Doctor ID</Alert>
+        }
+             
             </div>)}
             {this.state.isShowTable && (
           <div className="flex flex-col justify-center mt-10 space-y-2 w-2/4">
-            <DoctorTable
-              handleBack={this.handleBack}
+            <DoctorDetailTable
+              handleBack={this.handleBack} DoctorData={this.state.DoctorData}
             />
           </div>
         )}
+        {this.state.showDoctorAddDetail&&
+        <div className="flex flex-col justify-center mt-10 space-y-2 w-2/4">
+        <AddDoctorDetail account={this.props.account} userContract={this.props.userContract}/>
+      </div>}
       </div>
     );
   }
 }
 
-export default withStyles(styles)(UpcomingEvents);
+export default withStyles(styles)(DoctorDetail);

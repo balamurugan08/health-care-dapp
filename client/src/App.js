@@ -74,7 +74,7 @@ class App extends Component {
       <div className="flex flex-col min-h-screen">
         <Route path="/" component={Signup} exact children={ <Signup  account={accounts[0]} userContract={userContract} />}></Route>
         <Route path="/login" component={Login} children={ <Login  account={accounts[0]} userContract={userContract} />}></Route>
-        <Route path="/home" component={Main}></Route>
+        <Route path="/home" component={Main} children={ <Main  account={accounts[0]} userContract={userContract} />}></Route>
       </div>
     </BrowserRouter>
     );
