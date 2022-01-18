@@ -10166,12 +10166,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x60ed793B55EC10d75C3D03D0952d89EfCc94BD5b",
-      "transactionHash": "0xc7e577c80440996c52b148d695dfefb9f895bd63802725b922d9d75438ee4db0"
+      "address": "0x68977F9B9f2DDf95D5f731B1997baEa5B8C2048a",
+      "transactionHash": "0x9f9f3c6f52d7816ae32314364ee44246f21a124e328772a8079183bc1520678a"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-01-10T15:13:10.218Z",
+  "updatedAt": "2022-01-16T14:02:55.723Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Store & retrieve value in a variable",

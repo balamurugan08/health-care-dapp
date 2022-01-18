@@ -7,6 +7,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Button from "@mui/material/Button";
+
 
 const styles = (theme) => ({
   table: {
@@ -35,12 +37,18 @@ const StyledTableRow = withStyles((theme) => ({
 class PatientDetailTable extends React.Component {
   state = {};
 
+  handleBack=()=>{
+    this.props.hidePatientDetail();
+  }
+
+
   render() {
     const { handleBack, classes, patientData } = this.props;
     const data = this.props.patientData;
     console.log('sadfsdfsd',data)
     return (
       <div className="space-y-6">
+       {/* <Button style={{'padding':1,'margin-bottom':6,justifyContent:'flex-start',width:50}} onClick={this.handleBack}>Back</Button> */}
         <TableContainer component={Paper}>
   <Table aria-label="simple table">
     <TableHead>

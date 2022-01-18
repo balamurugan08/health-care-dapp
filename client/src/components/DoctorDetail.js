@@ -116,6 +116,12 @@ class DoctorDetail extends React.Component {
     this.setState({ DoctorId: e.target.value });
   }
 
+  handleAddDoctorDetail=()=>{
+    this.setState({
+      showDoctorAddDetail:false
+    })
+  }
+
   render() {
     const {
       eventDetails,isShowCard,newEventDetails,DoctorData,shouldErrorMessageDisplay
@@ -162,7 +168,7 @@ class DoctorDetail extends React.Component {
         )}
         {this.state.showDoctorAddDetail&&
         <div className="flex flex-col justify-center mt-10 space-y-2 w-2/4">
-        <AddDoctorDetail account={this.props.account} userContract={this.props.userContract}/>
+        <AddDoctorDetail account={this.props.account} userContract={this.props.userContract} hideDoctorAddDetail={this.handleAddDoctorDetail}/>
       </div>}
       </div>
     );

@@ -112,6 +112,19 @@ class PatientDetail extends React.Component {
     })
   }
 
+  
+  handleAddPatientDetail=()=>{
+    this.setState({
+      showPatientAddDetail:false
+    })
+  }
+
+  handlePatientDetail=()=>{
+    this.setState({
+      isShowTable:false
+    })
+  }
+
   handlePatientID = (e)=>{
     this.setState({ patientId: e.target.value });
   }
@@ -156,13 +169,13 @@ class PatientDetail extends React.Component {
             {this.state.isShowTable && (
           <div className="flex flex-col justify-center mt-10 space-y-2 w-2/4">
             <PatientDetailTable
-              handleBack={this.handleBack} patientData={this.state.patientData}
+              handleBack={this.handleBack} patientData={this.state.patientData} hidePatientDetail={this.handlePatientDetail}
             />
           </div>
         )}
         {this.state.showPatientAddDetail&&
         <div className="flex flex-col justify-center mt-10 space-y-2 w-2/4">
-        <AddPatientDetail account={this.props.account} userContract={this.props.userContract}/>
+        <AddPatientDetail account={this.props.account} userContract={this.props.userContract} hidePatientAddDetail={this.handleAddPatientDetail}/>
       </div>}
       </div>
     );

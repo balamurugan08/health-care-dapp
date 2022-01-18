@@ -87,6 +87,9 @@ class AddDoctorDetail extends React.Component {
     push('/home');
 
   };
+  handleBack=()=>{
+    this.props.hideDoctorAddDetail();
+  }
 
   render() {
     const {DoctorId, username,age,address, email, phoneNumber, gender,shouldAlertDisplay,shouldErrorMessageDisplay,signupErrorMessage } =
@@ -94,6 +97,7 @@ class AddDoctorDetail extends React.Component {
       
     return (
       <div className="flex flex-col space-y-5 max-w-md mx-auto my-16 min-w-500">
+        <Button style={{'padding':1,'margin-bottom':6,justifyContent:'flex-start',width:50}} onClick={this.handleBack}>Back</Button>
         <h2 className="text-4xl font-semibold text-blue-500">New Doctor Details</h2>
         <TextField
           required
